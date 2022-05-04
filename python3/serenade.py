@@ -97,8 +97,29 @@ def handle_message(message):
             if 'path' in command:
                 # TODO: escape
                 vim.command(f'e {command["path"]}')
+        elif ct == 'COMMAND_TYPE_PRESS':
+            handle_press(command)
+        else:
+            print('Unknown:', command)
 
 
     resp = json.dumps({"message": "callback", "data": {"callback": data["callback"], "data": result}})
 
     return resp + '\n'
+
+keymap = {
+    'up': r'\<Up>',
+    'down': r'\<Down>',
+}
+
+def handle_press(command):
+    print(command)
+    key = keymap.get(command['text'])
+
+    if key is None:
+        print('Unknown key:', command['text'])
+        return
+
+    count = command.get('index', 1)
+
+    vim.command(f'exec "normal {key * count}"')
