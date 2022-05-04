@@ -61,6 +61,84 @@ def set_editor_state(src, index):
         vim.command('normal ^')
 
 
+def get_config(key, default=None):
+    cmd = vim.eval(f'get(b:, "serenade_{key}", "")')
+
+    if cmd != '':
+        return cmd
+
+    cmd = vim.eval(f'get(g:, "serenade_{key}", "")')
+
+    if cmd != '':
+        return cmd
+
+    return default
+
+
+simple_commands = {
+    'COMMAND_TYPE_CREATE_TAB':
+        'tabnew',
+    'COMMAND_TYPE_CLOSE_TAB':
+        'tabclose',
+    'COMMAND_TYPE_NEXT_TAB':
+        'normal gt',
+    'COMMAND_TYPE_PREVIOUS_TAB':
+        'normal gT',
+
+    'COMMAND_TYPE_UNDO':
+        'normal u',
+    'COMMAND_TYPE_REDO':
+        r'exec "normal \<C-r>"',
+
+    'COMMAND_TYPE_SAVE':
+        'wa',
+
+    'COMMAND_TYPE_BACK':
+        r'exec "normal \<C-o>"',
+    'COMMAND_TYPE_FORWARD':
+        r'exec "normal \<C-i>"',
+
+    'COMMAND_TYPE_STYLE':
+        None,
+    'COMMAND_TYPE_GO_TO_DEFINITION':
+        None,
+
+    'COMMAND_TYPE_DEBUGGER_TOGGLE_BREAKPOINT':
+        None,
+    'COMMAND_TYPE_DEBUGGER_START':
+        None,
+    'COMMAND_TYPE_DEBUGGER_PAUSE':
+        None,
+    'COMMAND_TYPE_DEBUGGER_STOP':
+        None,
+    'COMMAND_TYPE_DEBUGGER_SHOW_HOVER':
+        None,
+    'COMMAND_TYPE_DEBUGGER_CONTINUE':
+        None,
+    'COMMAND_TYPE_DEBUGGER_STEP_INTO':
+        None,
+    'COMMAND_TYPE_DEBUGGER_STEP_OUT':
+        None,
+    'COMMAND_TYPE_DEBUGGER_STEP_OVER':
+        None,
+    'COMMAND_TYPE_DEBUGGER_INLINE_BREAKPOINT':
+        None,
+
+    'COMMAND_TYPE_RELOAD':
+        None,
+
+    # TODO
+    #'COMMAND_TYPE_SWITCH_TAB': None,
+    #'COMMAND_TYPE_OPEN_FILE_LIST': None,
+    #'COMMAND_TYPE_OPEN_FILE': None,
+    #'COMMAND_TYPE_SCROLL': None,
+    #'COMMAND_TYPE_SELECT': None,
+    #'COMMAND_TYPE_CLICK': None,
+}
+
+def command_to_config_key(command_type):
+    return command_type[len('COMMAND_TYPE_'):].lower() + '_command'
+
 def handle_message(message):
     if len(message) == 0 or message[0] != '{':
         print('[Serenade]', message)
@@ -72,31 +150,31 @@ def handle_message(message):
 
     for command in data["response"]["execute"]["commandsList"]:
         ct = command["type"]
-        if ct == "COMMAND_TYPE_GET_EDITOR_STATE":
+        print('Command: ' + ct)
+
+        if ct in simple_commands:
+            vim_cmd = get_config(command_to_config_key(ct), simple_commands[ct])
+
+            if vim_cmd is None:
+                print(f'You need to set either b:serenade_{config_key} or g:serenade_{config_key} to use this operation')
+            else:
+                vim.command(vim_cmd)
+        elif ct == "COMMAND_TYPE_GET_EDITOR_STATE":
             result = {
                 "message": "editorState",
                 "data": get_editor_state(command.get("limited", False)),
             }
         elif ct == "COMMAND_TYPE_DIFF":
             set_editor_state(command["source"], command["cursor"])
-        elif ct == "COMMAND_TYPE_NEXT_TAB":
-            vim.command('normal gt')
-        elif ct == "COMMAND_TYPE_PREVIOUS_TAB":
-            vim.command('normal gT')
-        elif ct == "COMMAND_TYPE_UNDO":
-            vim.command('normal u')
-        elif ct == "COMMAND_TYPE_REDO":
-            vim.command(r'exec "normal \<C-r>"')
-        elif ct == "COMMAND_TYPE_SAVE":
-            vim.command('wa') # TODO: make configurable
-        elif ct == "COMMAND_TYPE_BACK":
-            vim.command(r'exec "normal \<C-o>"') # TODO: make configurable
-        elif ct == "COMMAND_TYPE_FORWARD":
-            vim.command(r'exec "normal \<C-i>"') # TODO: make configurable
         elif ct == "COMMAND_TYPE_OPEN_FILE_LIST":
             if 'path' in command:
                 # TODO: escape
                 vim.command(f'e {command["path"]}')
+        elif ct == 'COMMAND_TYPE_SWITCH_TAB':
+            index = command.get('index')
+
+            if index is not None:
+                vim.command(f'normal {index}gt')
         elif ct == 'COMMAND_TYPE_PRESS':
             handle_press(command)
         else:
