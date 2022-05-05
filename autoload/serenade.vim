@@ -28,7 +28,12 @@ func serenade#Init()
     " expects)
     set ve+=onemore
 
-    " au FocusGained * call serenade#Active()
+    au FocusGained * call serenade#Active()
+endfun
+
+func serenade#InitBufferConfig(key, default)
+    let fullkey = 'b:serenade_'.a:key
+    let b:[key] = get(b:, fullkey, a:default)
 endfun
 
 func serenade#OnOutput(job, msg)

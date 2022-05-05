@@ -5,6 +5,7 @@ import traceback
 import websockets
 import sys
 import logging
+from os.path import expanduser
 
 id = str(random.random())
 websocket = None
@@ -20,7 +21,7 @@ async def send(message, data):
 
 
 logging.basicConfig(
-    filename='~/serenade.log',
+    filename=expanduser('~/.serenade.log'),
     encoding='utf-8',
     level=logging.INFO,
     format='%(asctime)s %(process)d %(levelname)-8s %(message)s',
@@ -68,11 +69,16 @@ async def read_input():
     while True:
         line = (await reader.readline()).decode().strip()
 
-        logging.info('LINE: ' + line)
-        # if line == b'active\n':
-        #     logging.info('Active')
-        #     await send_active()
-        #     continue
+        logging.info('INPUT: ' + line)
+
+        if not line.startswith('{'):
+            if line == 'active':
+                logging.info('Active')
+                await send_active()
+            else:
+                logging.error('Unknown input: ' + line)
+
+            continue
 
         try:
             await send_raw(line)

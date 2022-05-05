@@ -1,5 +1,8 @@
 import json
 import vim
+import difflib
+
+diff = difflib.Differ()
 
 def cursor_to_index(lines, cursor):
     row, col = cursor
@@ -48,8 +51,19 @@ def get_editor_state(limited):
 def set_editor_state(src, index):
     lines = src.split('\n')
 
-    # TODO: use diff to preserve marks
-    vim.current.buffer[:] = lines
+    i = 0
+    j = 0
+
+    for line in diff.compare(vim.current.buffer[:], lines):
+        if line.startswith('  '):
+            i += 1
+            j += 1
+        elif line.startswith('- '):
+            del vim.current.buffer[i]
+        elif line.startswith('+ '):
+            vim.current.buffer.append(lines[j], i)
+            i += 1
+            j += 1
 
     # This creates a new undo block so that undo/redo works correctly
     vim.command('let &ul=&ul')
@@ -127,8 +141,10 @@ simple_commands = {
     'COMMAND_TYPE_RELOAD':
         None,
 
+    'COMMAND_TYPE_PAUSE':
+        '', # no-op
+
     # TODO
-    #'COMMAND_TYPE_SWITCH_TAB': None,
     #'COMMAND_TYPE_OPEN_FILE_LIST': None,
     #'COMMAND_TYPE_OPEN_FILE': None,
     #'COMMAND_TYPE_SCROLL': None,
@@ -150,14 +166,16 @@ def handle_message(message):
 
     for command in data["response"]["execute"]["commandsList"]:
         ct = command["type"]
-        print('Command: ' + ct)
+        # TODO: Proper logging
+        # print('Command: ' + ct)
 
         if ct in simple_commands:
-            vim_cmd = get_config(command_to_config_key(ct), simple_commands[ct])
+            config_key = command_to_config_key(ct)
+            vim_cmd = get_config(config_key, simple_commands[ct])
 
             if vim_cmd is None:
                 print(f'You need to set either b:serenade_{config_key} or g:serenade_{config_key} to use this operation')
-            else:
+            elif vim_cmd != '':
                 vim.command(vim_cmd)
         elif ct == "COMMAND_TYPE_GET_EDITOR_STATE":
             result = {
@@ -180,7 +198,6 @@ def handle_message(message):
         else:
             print('Unknown:', command)
 
-
     resp = json.dumps({"message": "callback", "data": {"callback": data["callback"], "data": result}})
 
     return resp + '\n'
@@ -188,6 +205,10 @@ def handle_message(message):
 keymap = {
     'up': r'\<Up>',
     'down': r'\<Down>',
+    'left': r'\<Left>',
+    'right': r'\<Right>',
+    'pagedown': r'\<Pagedown>',
+    'pageup': r'\<Pageup>',
 }
 
 def handle_press(command):
@@ -195,9 +216,10 @@ def handle_press(command):
     key = keymap.get(command['text'])
 
     if key is None:
+        print(command)
         print('Unknown key:', command['text'])
         return
 
-    count = command.get('index', 1)
+    count = max(command.get('index', 1), 1)
 
     vim.command(f'exec "normal {key * count}"')
