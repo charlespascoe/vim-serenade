@@ -105,7 +105,7 @@ simple_commands = {
         r'exec "normal \<C-r>"',
 
     'COMMAND_TYPE_SAVE':
-        'wa',
+        'w',
 
     'COMMAND_TYPE_BACK':
         r'exec "normal \<C-o>"',
