@@ -186,7 +186,7 @@ def handle_message(message):
             vim_cmd = get_config(config_key, simple_commands[ct])
 
             if vim_cmd is None:
-                print(f'You need to set either b:serenade_{config_key} or g:serenade_{config_key} to use this operation')
+                print(f'[Serenade] You need to set either b:serenade_{config_key} or g:serenade_{config_key} to use this operation')
             elif vim_cmd != '':
                 vim.command(vim_cmd)
         elif ct == "COMMAND_TYPE_GET_EDITOR_STATE":
@@ -209,8 +209,11 @@ def handle_message(message):
             handle_press(command)
         elif ct == 'COMMAND_TYPE_EVALUATE_IN_PLUGIN':
             vim.command(command['text'])
+        elif ct == 'COMMAND_TYPE_CUSTOM':
+            # TODO: figure out what I'm supposed to do with these
+            pass
         else:
-            print('Unknown:', command)
+            print('[Serenade] Unknown message:', command)
 
     resp = json.dumps({"message": "callback", "data": {"callback": data["callback"], "data": result}})
 
@@ -223,7 +226,7 @@ def handle_press(command):
 
     if key is None:
         print(command)
-        print('Unknown key:', command['text'])
+        print('[Serenade] Unknown key:', command['text'])
         return
 
     if key == '':
