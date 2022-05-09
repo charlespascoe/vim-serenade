@@ -6,6 +6,11 @@ with your voice in Vim.
 **Note: this plugin is mostly complete but still being developed.** If you have
 any problems, feel free to create an issue.
 
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+    - [Custom Commands](#custom-commands)
+
 ## Requirements
 
 - [Serenade](https://serenade.ai/download) (tested with 1.10.3)
@@ -24,6 +29,26 @@ git clone https://github.com/charlespascoe/vim-serenade.git ~/.vim/pack/vim-sere
 ```
 
 ## Configuration
+
+For Serenade to detect when Vim is focused, it uses a regular expression to
+check the name of the foreground process. In `vim-serenade`, this regular
+expression is configurable using the `g:serenade_match_re` in your vimrc, which
+defaults to `term` (i.e. 'term' must be present somewhere in the process name,
+e.g. 'iterm2' or 'terminal'). If you're using another terminal or are using
+gvim, you'll need to change it to something that will match the process name:
+
+```
+let g:serenade_match_re = 'alacritty'
+```
+
+Non-command options are:
+
+| Config Option | Default Value | Description |
+|---------------|---------------|-------------|
+| `g:serenade_app_name` | `'Vim'` | Sets the application name that is displayed in Serenade. |
+| `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
+
+### Custom Commands
 
 Most Serenade commands are mapped to simple Vim commands, which can be
 overridden globally or on a per-buffer basis (e.g. to have different commands
