@@ -42,7 +42,8 @@ Using the built-in package management:
 git clone https://github.com/charlespascoe/vim-serenade.git ~/.vim/pack/vim-serenade/start/vim-serenade/
 ```
 
-To start the plugin and connect to Serenade, use the `SerenadeStart` command.
+By default, `vim-serenade` will start automatically when Vim opens, or you can
+use the `SerenadeStart` command.
 
 ## Configuration
 
@@ -57,10 +58,13 @@ gvim, you'll need to change it to something that will match the process name:
 let g:serenade_match_re = 'alacritty'
 ```
 
-Non-command options are:
+Non-command options are listed below; these options should be in your `vimrc`
+so that they are set before the plugin is loaded.
+
 
 | Config Option | Default Value | Description |
 |---------------|---------------|-------------|
+| `g:serenade_autostart` | `1` | Automatically runs `SerenadeStart` command on start. |
 | `g:serenade_app_name` | `'Vim'` | The application name that is displayed in Serenade. |
 | `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
 

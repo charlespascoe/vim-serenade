@@ -4,3 +4,7 @@
 set ve+=onemore
 
 command SerenadeStart call serenade#Init()
+
+if get(g:, 'serenade_autostart', 1)
+    SerenadeStart
+end
