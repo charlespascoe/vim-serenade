@@ -207,6 +207,8 @@ def handle_message(message):
                 vim.command(f'normal {index}gt')
         elif ct == 'COMMAND_TYPE_PRESS':
             handle_press(command)
+        elif ct == 'COMMAND_TYPE_EVALUATE_IN_PLUGIN':
+            vim.command(command['text'])
         else:
             print('Unknown:', command)
 
