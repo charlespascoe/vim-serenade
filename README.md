@@ -10,6 +10,7 @@ any problems, feel free to create an issue.
 - [Installation](#installation)
 - [Configuration](#configuration)
     - [Custom Commands](#custom-commands)
+- [Troubleshooting](#troubleshooting)
 
 ## Requirements
 
@@ -17,6 +18,10 @@ any problems, feel free to create an issue.
 - Python 3
 - Python `websockets` module (`pip3 install websockets`)
 - Vim 8
+- Possibly
+  [vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events)
+  if you're using tmux and you use multiple Vim instances.
+    - Still investigating to see if this is really needed.
 
 Developed and tested on MacOS, should work on Linux.
 
@@ -45,7 +50,7 @@ Non-command options are:
 
 | Config Option | Default Value | Description |
 |---------------|---------------|-------------|
-| `g:serenade_app_name` | `'Vim'` | Sets the application name that is displayed in Serenade. |
+| `g:serenade_app_name` | `'Vim'` | The application name that is displayed in Serenade. |
 | `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
 
 ### Custom Commands
@@ -97,3 +102,24 @@ The following options are available:
 | `serenade_debugger_inline_breakpoint_command` | None |
 | `serenade_reload_command` | None |
 | `serenade_pause_command` | `''` (No-op) |
+
+## Troubleshooting
+
+**Serenade doesn't detect when I switch to a different instance of Vim**
+
+Add the following to your `vimrc`, open multiple instances of Vim, then switch
+between vim instances to see if it logs a message:
+
+`au FocusGained * echom "Focus Gained"`
+
+This event is used to determine which instance of Vim is currently focused, and
+to send a message to Serenade so that control commands are sent to the correct
+instance of Vim.
+
+If you are using tmux and nothing is logging when you switch between Vim
+instances, then try installing
+[vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events),
+and be sure to set any necessary tmux config options.
+
+If you are using some other terminal or terminal multiplexer, then you may wish
+to search for "\<name of terminal/multiplexer> vim FocusGained".
