@@ -52,18 +52,15 @@ def set_editor_state(src, index):
     lines = src.split('\n')
 
     i = 0
-    j = 0
 
     for line in diff.compare(vim.current.buffer[:], lines):
         if line.startswith('  '):
             i += 1
-            j += 1
         elif line.startswith('- '):
             del vim.current.buffer[i]
         elif line.startswith('+ '):
-            vim.current.buffer.append(lines[j], i)
+            vim.current.buffer.append(lines[i], i)
             i += 1
-            j += 1
 
     # This creates a new undo block so that undo/redo works correctly
     vim.command('let &ul=&ul')
