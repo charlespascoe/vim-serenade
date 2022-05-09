@@ -17,6 +17,7 @@ websocket = None
 
 app_name = 'Vim'
 match_re = 'term'
+websocket_address = 'ws://localhost:17373'
 
 async def send(message, data):
     if not websocket:
@@ -24,13 +25,6 @@ async def send(message, data):
 
     await send_raw(json.dumps({"message": message, "data": data}))
 
-
-logging.basicConfig(
-    filename=expanduser('~/.serenade.log'),
-    level=logging.INFO,
-    format='%(asctime)s %(process)d %(levelname)-8s %(message)s',
-    datefmt='%Y-%m-%d %H:%M:%S',
-)
 
 async def send_raw(msg):
     if not websocket:
@@ -109,7 +103,7 @@ async def handler():
 
     while True:
         try:
-            async with websockets.connect("ws://localhost:17373") as ws:
+            async with websockets.connect(websocket_address) as ws:
                 websocket = ws
                 output("Connected")
                 logging.info('Connected')
@@ -133,7 +127,16 @@ async def handler():
 if __name__ == "__main__":
     app_name = sys.argv[1]
     match_re = sys.argv[2]
-    output(app_name)
-    output(match_re)
+    websocket_address = sys.argv[3]
+    should_log = sys.argv[4]
+
+    if should_log != '0':
+        logging.basicConfig(
+            filename=expanduser('~/.vim-serenade.log'),
+            level=logging.INFO,
+            format='%(asctime)s %(process)d %(levelname)-8s %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S',
+        )
+
     output("Running")
     asyncio.get_event_loop().run_until_complete(handler())

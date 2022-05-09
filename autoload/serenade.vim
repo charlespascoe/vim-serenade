@@ -4,6 +4,9 @@ let s:serenade_running = 0
 let g:serenade_app_name = get(g:, 'serenade_app_name', 'Vim')
 let g:serenade_match_re = get(g:, 'serenade_match_re', 'term')
 
+let s:ws_addr = get(g:, 'serenade_websocket_address', 'ws://localhost:17373')
+let s:should_log = get(g:, 'serenade_enable_logging', 0)
+
 func serenade#Init()
     if s:serenade_running
         return
@@ -11,7 +14,7 @@ func serenade#Init()
 
     let s:serenade_running = 1
 
-    let s:job = job_start(['python3', s:client_path, g:serenade_app_name, g:serenade_match_re], {
+    let s:job = job_start(['python3', s:client_path, g:serenade_app_name, g:serenade_match_re, s:ws_addr, s:should_log], {
     \    'out_io': 'pipe',
     \    'err_io': 'pipe',
     \    'in_io': 'pipe',

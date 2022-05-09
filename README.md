@@ -67,6 +67,8 @@ so that they are set before the plugin is loaded.
 | `g:serenade_autostart` | `1` | Automatically runs `SerenadeStart` command on start. |
 | `g:serenade_app_name` | `'Vim'` | The application name that is displayed in Serenade. |
 | `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
+| `g:serenade_websocket_address` | `'ws://localhost:17373'` | The Serenade WebSocket address to connect to |
+| `g:serenade_enable_logging` | `0` | Turns on logging (`~/.vim-serenade.log`). |
 
 ### Serenade Command Configuration
 
