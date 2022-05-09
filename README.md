@@ -142,6 +142,11 @@ vim.command(
 );
 
 vim.command(
+  'center',
+  (api) => api.evaluateInPlugin('normal zz'),
+);
+
+vim.command(
   'close',
   (api) => api.evaluateInPlugin('q'),
   {autoExecute: false},
@@ -150,7 +155,9 @@ vim.command(
 
 You can run anything that is a valid Vim command, including running vimscript
 functions (e.g. `call MyFunction()`), which you can use to pass data extracted
-from voice commands.
+from voice commands. For more examples, see the `serenade-custom-commands.js` in
+this project or take a look at [my list of custom
+commands](https://github.com/charlespascoe/dotfiles/blob/master/serenade/custom.js).
 
 ## Troubleshooting
 
