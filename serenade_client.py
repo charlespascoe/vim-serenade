@@ -1,3 +1,7 @@
+# This file is based on a python example of the Serenade protocol written by
+# Tommy MacWilliam, available here:
+# https://github.com/serenadeai/protocol/blob/master/python-editor/app.py
+
 import asyncio
 import json
 import random
@@ -6,6 +10,7 @@ import websockets
 import sys
 import logging
 from os.path import expanduser
+
 
 id = str(random.random())
 websocket = None
@@ -110,8 +115,6 @@ async def handler():
                 output("Connected")
                 logging.info('Connected')
 
-                # send an active message to tell Serenade we're running. since this is running from a terminal,
-                # use "term" as the match regex, which will match iTerm, terminal, etc.
                 await send_active()
 
                 while True:
