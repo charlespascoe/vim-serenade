@@ -49,7 +49,7 @@ use the `SerenadeStart` command.
 
 For Serenade to detect when Vim is focused, it uses a regular expression to
 check the name of the foreground process. In `vim-serenade`, this regular
-expression is configurable using the `g:serenade_match_re` in your vimrc, which
+expression is configurable using the `g:serenade_match_re` in your `vimrc`, which
 defaults to `term` (i.e. 'term' must be present somewhere in the process name,
 e.g. 'iterm2' or 'terminal'). If you're using another terminal or are using
 gvim, you'll need to change it to something that will match the process name:
@@ -66,7 +66,7 @@ so that they are set before the plugin is loaded.
 |---------------|---------------|-------------|
 | `g:serenade_autostart` | `1` | Automatically runs `SerenadeStart` command on start. |
 | `g:serenade_app_name` | `'Vim'` | The application name that is displayed in Serenade. |
-| `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
+| `g:serenade_match_re` | `'term'` | The regular expression that Serenade uses to determine whether the focused application is associated with this plugin. |
 | `g:serenade_websocket_address` | `'ws://localhost:17373'` | The Serenade WebSocket address to connect to |
 | `g:serenade_enable_logging` | `0` | Turns on logging (`~/.vim-serenade.log`). |
 
@@ -77,7 +77,7 @@ overridden globally or on a per-buffer basis (e.g. to have different commands
 for different file types). Per-buffer options are preferred over global
 options, global options are preferred over the default options.
 
-To set an option globally, use the global scope (`g:`) in your `.vimrc`:
+To set an option globally, use the global scope (`g:`) in your `vimrc`:
 
 ```
 let g:serenade_save_command = 'wa'
@@ -92,7 +92,9 @@ the following line to `~/.vim/ftplugin/go.vim`:
 let b:serenade_go_to_definition_command = 'GoDef'
 ```
 
-The following options are available:
+The following command options are available; they can be set or changed at any
+time.
+
 
 | Config Option | Default Value |
 |---------------|-----------------|
