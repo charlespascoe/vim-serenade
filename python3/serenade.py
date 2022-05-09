@@ -2,7 +2,21 @@ import json
 import vim
 import difflib
 
+
 diff = difflib.Differ()
+keymap = {
+    # When the user issues one of these commands, it will both move the cursor
+    # using the diff command and also send the commands for these keys,
+    # resulting in the cursor moving twice. As a result, the arrow keys have to
+    # be disabled.
+    'up': '',
+    'down': '',
+    'left': '',
+    'right': '',
+    'pagedown': r'\<Pagedown>',
+    'pageup': r'\<Pageup>',
+}
+
 
 def cursor_to_index(lines, cursor):
     row, col = cursor
@@ -11,6 +25,7 @@ def cursor_to_index(lines, cursor):
     count += col
 
     return count
+
 
 def index_to_cursor(lines, index):
     x = index
@@ -22,6 +37,7 @@ def index_to_cursor(lines, index):
 
     return (l + 1, x)
 
+
 def print_current_file():
     lines = vim.current.buffer[:]
     print(len(lines))
@@ -32,6 +48,7 @@ def print_current_file():
     print(src[:index] + '|' + src[index:])
 
     print(cursor, index_to_cursor(src, index))
+
 
 def get_editor_state(limited):
     filename = vim.current.buffer.name
@@ -47,6 +64,7 @@ def get_editor_state(limited):
         "cursor": cursor_to_index(lines, cursor),
         "filename": filename,
     }
+
 
 def set_editor_state(src, index):
     lines = src.split('\n')
@@ -144,8 +162,10 @@ simple_commands = {
     #'COMMAND_TYPE_CLICK': None,
 }
 
+
 def command_to_config_key(command_type):
     return command_type[len('COMMAND_TYPE_'):].lower() + '_command'
+
 
 def handle_message(message):
     if len(message) == 0 or message[0] != '{':
@@ -194,18 +214,6 @@ def handle_message(message):
 
     return resp + '\n'
 
-keymap = {
-    # When the user issues one of these commands, it will both move the cursor
-    # using the diff command and also send the commands for these keys,
-    # resulting in the cursor moving twice. As a result, the arrow keys have to
-    # be disabled.
-    'up': '',
-    'down': '',
-    'left': '',
-    'right': '',
-    'pagedown': r'\<Pagedown>',
-    'pageup': r'\<Pageup>',
-}
 
 def handle_press(command):
     print(command)
