@@ -203,10 +203,14 @@ def handle_message(message):
     return resp + '\n'
 
 keymap = {
-    'up': r'\<Up>',
-    'down': r'\<Down>',
-    'left': r'\<Left>',
-    'right': r'\<Right>',
+    # When the user issues one of these commands, it will both move the cursor
+    # using the diff command and also send the commands for these keys,
+    # resulting in the cursor moving twice. As a result, the arrow keys have to
+    # be disabled.
+    'up': '',
+    'down': '',
+    'left': '',
+    'right': '',
     'pagedown': r'\<Pagedown>',
     'pageup': r'\<Pageup>',
 }
@@ -218,6 +222,9 @@ def handle_press(command):
     if key is None:
         print(command)
         print('Unknown key:', command['text'])
+        return
+
+    if key == '':
         return
 
     count = max(command.get('index', 1), 1)
