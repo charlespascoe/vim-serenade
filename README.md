@@ -2,17 +2,23 @@
 
 Write code with your voice in Vim with [Serenade](https://serenade.ai).
 
-Supports multiple instances of Vim, and can integrate with third-party plugins
-for language-specific features such as jumping to definitions or debugging.
+Features:
+
+- Supports multiple instances of Vim running simultaneously, switching focus as
+  needed
+- Supports integration with third-party plugins for language-specific features
+  (e.g. jumping to definitions or debugging)
+- Custom Serenade commands to do anything you want inside Vim (e.g. split view,
+  buffer management, running arbitrary vimscript)
 
 **Note: this plugin is mostly complete but still being developed.** If you have
 any problems, feel free to create an issue.
 
 - [Requirements](#requirements)
-- [Installation](#installation)
-- [Commands](#commands)
+- [Installation and Usage](#installation-and-usage)
 - [Configuration](#configuration)
-    - [Custom Commands](#custom-commands)
+    - [Serenade Command Configuration](#serenade-command-configuration)
+- [Custom Commands](#custom-commands)
 - [Troubleshooting](#troubleshooting)
 
 ## Requirements
@@ -28,15 +34,13 @@ any problems, feel free to create an issue.
 
 Developed and tested on MacOS, should work on Linux.
 
-## Installation
+## Installation and Usage
 
 Using the built-in package management:
 
 ```
 git clone https://github.com/charlespascoe/vim-serenade.git ~/.vim/pack/vim-serenade/start/vim-serenade/
 ```
-
-## Commands
 
 To start the plugin and connect to Serenade, use the `SerenadeStart` command.
 
@@ -60,7 +64,7 @@ Non-command options are:
 | `g:serenade_app_name` | `'Vim'` | The application name that is displayed in Serenade. |
 | `g:serenade_match_re` | `'term'` | The regular expression that Seranade uses to determine whether the focused application is associated with this plugin. |
 
-### Custom Commands
+### Serenade Command Configuration
 
 Most Serenade commands are mapped to simple Vim commands, which can be
 overridden globally or on a per-buffer basis (e.g. to have different commands
@@ -109,6 +113,38 @@ The following options are available:
 | `serenade_debugger_inline_breakpoint_command` | None |
 | `serenade_reload_command` | None |
 | `serenade_pause_command` | `''` (No-op) |
+
+## Custom Commands
+
+Serenade allows you to define custom commands to perform arbitrary actions.
+Using the `evaluateInPlugin()` method, you can run arbitrary Vim commands from
+custom Serenade voice commands; for example, add the following to
+`~/.serenade/scripts/custom.js` to add some simple commands to control things
+like splits:
+
+```js
+const vim = serenade.app('Vim');
+
+vim.command(
+  'split',
+  (api) => api.evaluateInPlugin('vsplit'),
+);
+
+vim.command(
+  'horizontal split',
+  (api) => api.evaluateInPlugin('split'),
+);
+
+vim.command(
+  'close',
+  (api) => api.evaluateInPlugin('q'),
+  {autoExecute: false},
+);
+```
+
+You can run anything that is a valid Vim command, including running vimscript
+functions (e.g. `call MyFunction()`), which you can use to pass data extracted
+from voice commands.
 
 ## Troubleshooting
 
