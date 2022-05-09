@@ -73,14 +73,9 @@ def set_editor_state(src, index):
 
 
 def get_config(key, default=None):
-    cmd = vim.eval(f'get(b:, "serenade_{key}", "")')
+    cmd = vim.eval(f'get(b:, "serenade_{key}", get(g:, "serenade_{key}"))')
 
-    if cmd != '':
-        return cmd
-
-    cmd = vim.eval(f'get(g:, "serenade_{key}", "")')
-
-    if cmd != '':
+    if cmd != '0':
         return cmd
 
     return default
