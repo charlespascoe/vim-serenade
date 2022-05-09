@@ -1,7 +1,9 @@
 # Vim Plugin for Serenade.ai
 
-A Vim plugin that connects to [Serenade](https://serenade.ai) to let you code
-with your voice in Vim.
+Write code with your voice in Vim with [Serenade](https://serenade.ai).
+
+Supports multiple instances of Vim, and can integrate with third-party plugins
+for language-specific features such as jumping to definitions or debugging.
 
 **Note: this plugin is mostly complete but still being developed.** If you have
 any problems, feel free to create an issue.
