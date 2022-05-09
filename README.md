@@ -8,6 +8,7 @@ any problems, feel free to create an issue.
 
 - [Requirements](#requirements)
 - [Installation](#installation)
+- [Commands](#commands)
 - [Configuration](#configuration)
     - [Custom Commands](#custom-commands)
 - [Troubleshooting](#troubleshooting)
@@ -32,6 +33,10 @@ Using the built-in package management:
 ```
 git clone https://github.com/charlespascoe/vim-serenade.git ~/.vim/pack/vim-serenade/start/vim-serenade/
 ```
+
+## Commands
+
+To start the plugin and connect to Serenade, use the `SerenadeStart` command.
 
 ## Configuration
 
