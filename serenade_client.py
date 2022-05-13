@@ -103,7 +103,7 @@ async def handler():
 
     while True:
         try:
-            async with websockets.connect(websocket_address) as ws:
+            async with websockets.connect(websocket_address, max_size=10**9) as ws:
                 websocket = ws
                 output("Connected")
                 logging.info('Connected')
