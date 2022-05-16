@@ -53,9 +53,11 @@ func serenade#OnOutput(job, msg)
 endfun
 
 func serenade#Active()
-    let ch = job_getchannel(s:job)
+    if exists('s:job')
+        let ch = job_getchannel(s:job)
 
-    call ch_sendraw(ch, "active\n")
+        call ch_sendraw(ch, "active\n")
+    end
 endfun
 
 func serenade#OnError(job, msg)
