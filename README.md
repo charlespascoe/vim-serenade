@@ -16,9 +16,11 @@ any problems, feel free to create an issue.
 
 - [Requirements](#requirements)
 - [Installation and Usage](#installation-and-usage)
+    - [Tmux](#tmux)
 - [Configuration](#configuration)
     - [Serenade Command Configuration](#serenade-command-configuration)
 - [Custom Commands](#custom-commands)
+- [Known Issues](#known-issues)
 - [Troubleshooting](#troubleshooting)
 
 ## Requirements
