@@ -45,6 +45,21 @@ git clone https://github.com/charlespascoe/vim-serenade.git ~/.vim/pack/vim-sere
 By default, `vim-serenade` will start automatically when Vim opens, or you can
 use the `SerenadeStart` command.
 
+**Note:** You may need to set the `g:serenade_match_re` config option depending
+on how you're running Vim (see below). When you focus on Vim (or the terminal
+that's running Vim), Serenade should say "Vim" in the bottom-left corner.
+
+### Tmux
+
+If you're using tmux with multiple Vim instances, you'll need to add the
+following to your tmux config:
+
+`set -g focus-events on`
+
+This will ensure the currently-focused Vim instance receives the Serenade
+commands. If you're having issues, you may need
+[vim-tmux-focus-events](https://github.com/tmux-plugins/vim-tmux-focus-events).
+
 ## Configuration
 
 For Serenade to detect when Vim is focused, it uses a regular expression to
@@ -160,6 +175,12 @@ functions (e.g. `call MyFunction()`), which you can use to pass data extracted
 from voice commands. For more examples, see the `serenade-custom-commands.js` in
 this project or take a look at [my list of custom
 commands](https://github.com/charlespascoe/dotfiles/blob/master/serenade/custom.js).
+
+## Known Issues
+
+- Back/Forward commands don't seem to be passed to the plugin at the moment; see
+  `serenade-custom-commands.js` for a work-around.
+- Select isn't implemented yet.
 
 ## Troubleshooting
 
