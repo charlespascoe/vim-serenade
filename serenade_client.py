@@ -11,6 +11,7 @@ import sys
 import logging
 from os.path import expanduser
 
+icon = 'data:image/gif;base64,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'
 
 id = str(random.random())
 websocket = None
@@ -83,15 +84,23 @@ async def read_input():
         except Exception as e:
             logging.error('Failed to send raw input: %s' % e)
 
+
 def output(msg):
     sys.stdout.write(str(msg) + '\n')
     sys.stdout.flush()
 
-async def send_active():
-    await send(
-        "active",
-        {"id": id, "app": app_name, "match": match_re},
-    )
+
+async def send_active(send_icon=False):
+    msg = {
+        "id": id,
+        "app": app_name,
+        "match": match_re,
+    }
+
+    if send_icon:
+        msg["icon"] = icon
+
+    await send("active", msg)
 
 
 async def handler():
@@ -108,7 +117,7 @@ async def handler():
                 output("Connected")
                 logging.info('Connected')
 
-                await send_active()
+                await send_active(True)
 
                 while True:
                     try:
