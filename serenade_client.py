@@ -56,7 +56,7 @@ async def handle(message):
 
 async def get_input():
     loop = asyncio.get_event_loop()
-    reader = asyncio.StreamReader()
+    reader = asyncio.StreamReader(limit=1024*1024)
     protocol = asyncio.StreamReaderProtocol(reader)
     await loop.connect_read_pipe(lambda: protocol, sys.stdin)
     return reader
