@@ -32,6 +32,20 @@ func serenade#Init()
     set ve+=onemore
 
     au FocusGained * call serenade#Active()
+
+	" The following is required because Serenade both sends a command to press
+	" the arrow keys, along with sending the actual key presses. It essentially
+	" temporarily disables the keys after handling the command.
+
+	noremap <expr> <Up> py3eval('serenade.should_allow_key("up")') ? "\<Up>" : ""
+	noremap <expr> <Down> py3eval('serenade.should_allow_key("down")') ? "\<Down>" : ""
+	noremap <expr> <Left> py3eval('serenade.should_allow_key("left")') ? "\<Left>" : ""
+	noremap <expr> <Right> py3eval('serenade.should_allow_key("right")') ? "\<Right>" : ""
+
+	inoremap <expr> <Up> py3eval('serenade.should_allow_key("up")') ? "\<Up>" : ""
+	inoremap <expr> <Down> py3eval('serenade.should_allow_key("down")') ? "\<Down>" : ""
+	inoremap <expr> <Left> py3eval('serenade.should_allow_key("left")') ? "\<Left>" : ""
+	inoremap <expr> <Right> py3eval('serenade.should_allow_key("right")') ? "\<Right>" : ""
 endfun
 
 func serenade#InitBufferConfig(key, default)
@@ -66,4 +80,8 @@ endfun
 
 func serenade#OnExit(job, code)
     echom "Code: ".a:code
+endfun
+
+func serenade#RegisterUndo()
+    let &ul=&ul
 endfun

@@ -4,18 +4,19 @@ import difflib
 
 
 diff = difflib.Differ()
+
+
 keymap = {
-    # When the user issues one of these commands, it will both move the cursor
-    # using the diff command and also send the commands for these keys,
-    # resulting in the cursor moving twice. As a result, the arrow keys have to
-    # be disabled.
-    'up': '',
-    'down': '',
-    'left': '',
-    'right': '',
+    'up': r'\<Up>',
+    'down': r'\<Down>',
+    'left': r'\<Left>',
+    'right': r'\<Right>',
     'pagedown': r'\<Pagedown>',
     'pageup': r'\<Pageup>',
 }
+
+
+block_keypress_counters = {}
 
 
 def cursor_to_index(lines, cursor):
@@ -221,12 +222,12 @@ def handle_message(message):
 
 
 def handle_press(command):
-    print(command)
-    key = keymap.get(command['text'])
+    key_name = command['text']
+    key = keymap.get(key_name)
 
     if key is None:
         print(command)
-        print('[Serenade] Unknown key:', command['text'])
+        print('[Serenade] Unknown key:', key_name)
         return
 
     if key == '':
@@ -235,3 +236,27 @@ def handle_press(command):
     count = max(command.get('index', 1), 1)
 
     vim.command(f'exec "normal {key * count}"')
+    block_keypresses(key_name, count)
+
+
+def block_keypresses(key_name, count):
+    global block_keypress_counters
+    block_keypress_counters[key_name] = count
+
+
+def should_allow_key(key_name):
+    global block_keypress_counters
+
+    count = block_keypress_counters.get(key_name)
+
+    if count is not None:
+        count -= 1
+
+        if count == 0:
+            del block_keypress_counters[key_name]
+        else:
+            block_keypress_counters[key_name] = count
+
+        return False
+
+    return True
