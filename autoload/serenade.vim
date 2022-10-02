@@ -67,3 +67,7 @@ endfun
 func serenade#OnExit(job, code)
     echom "Code: ".a:code
 endfun
+
+func serenade#RegisterUndo()
+    let &ul=&ul
+endfun
