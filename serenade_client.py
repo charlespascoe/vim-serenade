@@ -19,6 +19,7 @@ websocket = None
 app_name = 'Vim'
 match_re = 'term'
 websocket_address = 'ws://localhost:17373'
+event_loop = None
 
 async def send(message, data):
     if not websocket:
@@ -55,10 +56,10 @@ async def handle(message):
 
 
 async def get_input():
-    loop = asyncio.get_event_loop()
+    global event_loop
     reader = asyncio.StreamReader(limit=1024*1024)
     protocol = asyncio.StreamReaderProtocol(reader)
-    await loop.connect_read_pipe(lambda: protocol, sys.stdin)
+    await event_loop.connect_read_pipe(lambda: protocol, sys.stdin)
     return reader
 
 
@@ -148,4 +149,5 @@ if __name__ == "__main__":
         )
 
     output("Running")
-    asyncio.get_event_loop().run_until_complete(handler())
+    event_loop = asyncio.new_event_loop()
+    event_loop.run_until_complete(handler())
